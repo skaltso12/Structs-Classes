@@ -1,0 +1,128 @@
+#include <iostream>
+#include <cmath>
+
+const int numPoints = 4;
+const int minValue = 1;
+const int maxValue = 100;
+const double eps = 0.2;
+
+struct point
+{
+	int x, y;
+
+	void readPoint();
+	void printPoint();
+};
+
+void point::readPoint()
+{
+	do
+	{
+		std::cout << "Point x = ";
+		std::cin >> x;
+
+	} while (x < minValue || x > maxValue);
+
+	do
+	{
+		std::cout << "Point y = ";
+		std::cin >> y;
+
+	} while (y < minValue || y > maxValue);
+}
+
+void point::printPoint()
+{
+	std::cout << "(" << x << ", " <<
+		y << ")" << std::endl;
+}
+
+void readPoints(point p[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << "Point " << (i + 1) 
+			<< std::endl;
+		p[i].readPoint();
+
+		std::cout << "------------------"
+			<< std::endl;
+	}
+}
+
+bool isRectangle(point a, point b, point c,
+	point d)
+{
+	return a.x == d.x && c.x == b.x &&
+		a.y == b.y && d.y == c.y;
+}
+
+bool isSquare(point a, point b, point c,
+	point d)
+{
+	return isRectangle(a, b, c, d) &&
+		abs(a.x - b.x) == abs(c.y - b.y);
+}
+
+double distancePoints(point p1, point p2)
+{
+	return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+}
+
+bool isParallelogram(point a, point b, point c,
+	point d)
+{
+	return abs(a.y - d.y) == abs(b.y - c.y) &&
+		abs(a.x - d.x) == abs(b.x - c.x);
+}
+
+bool isRhombus(point a, point b, point c,
+	point d)
+{
+	return isParallelogram(a, b, c, d) &&
+		abs(abs(a.x - b.x) - distancePoints(b, c)) <= eps;
+}
+
+bool isKite(point a, point b, point c,
+	point d)
+{
+	return abs(distancePoints(a, d) - distancePoints(c, d)) 
+		<= eps && abs(distancePoints(a, b) - distancePoints(c, b))
+		<= eps;
+}
+
+int figure(point a, point b, point c,
+	point d)
+{
+	if (isSquare(a, b, c, d)) return 1;
+	if (isRectangle(a, b, c, d)) return 2;
+	if (isRhombus(a, b, c, d)) return 3;
+	if (isParallelogram(a, b, c, d)) return 4;
+	if (isKite(a, b, c, d)) return 5;
+	return 0;
+}
+
+int main()
+{
+	point p[numPoints];
+	readPoints(p, numPoints);
+
+	point a, b, c, d;
+	a = p[0];
+	b = p[1];
+	c = p[2];
+	d = p[3];
+
+	switch (figure(a, b, c, d))
+	{
+	case 1: std::cout << "square"; break;
+	case 2: std::cout << "rectangle"; break;
+	case 3: std::cout << "rhombus"; break;
+	case 4: std::cout << "parallelogram"; break;
+	case 5: std::cout << "kite"; break;
+
+	default: std::cout << "Irregular quadrilateral"; break;
+	}
+
+	return 0;
+}
