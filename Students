@@ -1,0 +1,126 @@
+#include <iostream>
+#include <iomanip>
+
+const int maxSubjects = 16;
+const int maxName = 45;
+const int maxStudents = 20;
+
+struct student
+{
+	char name[maxName];
+	int fn;
+	double grades[maxSubjects + 1];
+
+	void ReadStudent(int);
+	void PrintStudent(int);
+	double AverageGrade(int);
+};
+
+double student::AverageGrade(int k)
+{
+	double sum = 0;
+	for (int i = 0; i < k; i++)
+		sum += grades[i];
+
+	grades[k] = sum / k;
+	return sum / k;
+}
+
+void student::ReadStudent(int k)
+{
+	std::cout << "------------------------------" << 
+		std::endl;
+	std::cout << "Enter student name : ";
+	std::cin.get();
+	std::cin.get(name, maxName);
+
+	std::cout << "Enter fn : ";
+	std::cin >> fn;
+
+	for (int i = 0; i < k; i++)
+	{
+		std::cout << "Enter " << k << "-th grade : ";
+		std::cin >> grades[i];
+	}
+}
+
+void student::PrintStudent(int k)
+{
+	std::cout.width(45);
+	std::cout << name;
+	std::cout << fn << "\t";
+
+	for (int i = 0; i < k; i++)
+		std::cout << grades[i] << "\t\t";
+}
+
+double AverageGradeSubject(student s[], int k, int n)
+{
+	double sum = 0;
+	for (int j = 0; j < n; j++)
+		sum += s[j].grades[k];
+
+	return sum / n;
+
+}
+
+void PrintStudents(student s[], int n, int k)
+{
+	std::cout.width(45);
+	std::cout.setf(std::ios::left);
+	std::cout << "Name" << "fn\t\t";
+
+	for (int i = 1; i <= k; i++)
+		std::cout << i << "-th grad\t";
+
+	std::cout << "Average grade" << std::endl;
+
+	std::cout.fill('=');
+	std::cout.width(90 + (k - 1) * 15);
+	std::cout << '=' << std::endl;
+	std::cout.fill(' ');
+
+	for (int i = 0; i < n; i++)
+	{
+		s[i].PrintStudent(k);
+		std::cout << std::setprecision(3) << s[i].AverageGrade(k);
+		std::cout << std::endl;
+	}
+
+	std::cout.width(47);
+	std::cout << ' ' << "\t\t";
+
+	for (int i = 0; i <= k; i++)
+		std::cout << AverageGradeSubject(s, i, n) << "\t\t";
+		
+}
+
+void ReadStudents(student s[], int n, int k)
+{
+	for (int i = 0; i < n; i++)
+		s[i].ReadStudent(k);
+}
+
+int main()
+{
+	int subjects;
+	do
+	{
+		std::cin >> subjects;
+	} while (subjects < 1 || 
+		subjects > maxSubjects);
+
+	int numStudents;
+	do
+	{
+		std::cin >> numStudents;
+	} while (numStudents < 1 ||
+		numStudents > maxStudents);
+
+	student students[maxStudents];
+
+	ReadStudents(students, numStudents, subjects);
+	PrintStudents(students, numStudents, subjects);
+
+	return 0;
+}
