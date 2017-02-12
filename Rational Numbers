@@ -1,0 +1,294 @@
+#include <iostream>
+#include <cmath>
+
+const int maxNumbers = 20;
+const int numCoef = 6;
+const int maxPow = 10;
+
+struct rat
+{
+	int num;
+	int den;
+	void makerat(int, int);
+	int numer();
+	int denom();
+	void printrat();
+};
+void rat::printrat()
+{
+	std::cout << num << "/" << den << std::endl;
+}
+int gcd(int a, int b)
+{
+	while (a != b)
+		if (a > b) a = a - b; else b = b - a;
+	return a;
+}
+void rat::makerat(int a, int b)
+{
+	if (a == 0) { num = 0; den = b; }
+	else
+	{
+		int g = gcd(abs(a), abs(b));
+		if (a>0 && b>0 || a<0 && b < 0)
+		{
+			num = abs(a) / g;
+			den = abs(b) / g;
+		}
+		else
+		{
+			num = -abs(a) / g;
+			den = abs(b) / g;
+		}
+	}
+}
+int rat::numer()
+{
+	return num;
+}
+int rat::denom()
+{
+	return den;
+}
+rat sumrat(rat& r1, rat& r2)
+{
+	rat r; r.makerat(r1.numer() * r2.denom() +
+		r2.numer() * r1.denom(),
+		r1.denom() * r2.denom());
+	return r;
+}
+rat subrat(rat& r1, rat& r2)
+{
+	rat r; r.makerat(r1.numer() * r2.denom() -
+		r2.numer() * r1.denom(),
+		r1.denom() * r2.denom());
+	return r;
+}
+rat multrat(rat& r1, rat& r2)
+{
+	rat r; r.makerat(r1.numer()*r2.numer(),
+		r1.denom()*r2.denom());
+	return r;
+}
+rat quotrat(rat& r1, rat& r2)
+{
+	rat r; r.makerat(r1.numer()*r2.denom(),
+		r1.denom()*r2.numer());
+	return r;
+}
+
+bool equal(rat x, rat y)
+{
+	if (x.num == y.num && x.den == y.den)
+		return true;
+
+	if (x.num == 0 && y.num == 0)
+		return true;
+
+	return false;
+}
+
+bool grthan(rat r1, rat r2)
+{
+	if (r1.den % r2.den != 0 && r2.den % r1.den != 0)
+		return r1.num * r2.den > r2.num * r1.den;
+
+	if (r1.den % r2.den == 0)
+		return r1.num > r2.num * (r1.den / r2.den);
+
+	return r1.num * (r2.den / r1.den) > r2.num;
+}
+
+void ReadRats(rat r[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		int num, den;
+		std::cout << "Enter " << i << "-th coef : ";
+		std::cin >> num;
+		std::cin.get();
+		std::cin >> den;
+		r[i].makerat(num, den);
+	}
+}
+
+//void ReadRats(rat r[], int n)
+//{
+//	for (int i = 0; i < n; i++)
+//	{
+//		int num, den;
+//		std::cout << (char)('a' + i) << " = ";
+//		std::cin >> num;
+//		std::cin.get();
+//		std::cin >> den;
+//		r[i].makerat(num, den);
+//	}
+//}
+
+rat maxRat(rat r[], int n)
+{
+	int maxIndex = 0;
+	for (int i = 1; i < n; i++)
+		if (grthan(r[i], r[maxIndex]))
+			maxIndex = i;
+
+	return r[maxIndex];
+}
+
+void SortRat(int n, rat* px[])
+{
+	for (int i = 0; i < n - 1; i++)
+		for (int j = i + 1; j < n; j++)
+			if (grthan(*px[i], *px[j]))
+			{
+				rat* temp = px[i];
+				px[i] = px[j];
+				px[j] = temp;
+			}
+}
+
+void PrintRats(int n, rat* r[])
+{
+	for (int i = 0; i < n; i++)
+	{
+		(*r[i]).printrat();
+	}
+}
+
+int RatOp()
+{
+	//rat r1; r1.makerat(-1, 2);
+	//rat r2; r2.makerat(3, 4);
+	//sumrat(r1, r2).printrat();
+	//// или rat r = sumrat(r1, r2); r.printrat();
+	//subrat(r1, r2).printrat();
+	//// или r = subrat(r1, r2); r.printrat();
+	//multrat(r1, r2).printrat();
+	//// или r = multrat(r1, r2); r.printrat();
+	//quotrat(r1, r2).printrat();
+	//// или r = quotrat(r1, r2); r.printrat();
+
+	rat r1; r1.makerat(7, 11);
+	rat r2; r2.makerat(70, 121);
+
+	rat x[maxNumbers];
+	rat* px[maxNumbers];
+	for (int i = 0; i < maxNumbers; i++)
+		px[i] = &x[i];
+
+	int n;
+	do
+	{
+		std::cin >> n;
+	} while (n < 2 || n > maxNumbers);
+
+	ReadRats(x, n);
+	SortRat(n, px);
+	PrintRats(n, px);
+
+	return 0;
+}
+
+int SystemSolutions()
+{
+	std::cout << "This program solves a linear system"
+		<< " of equasions :" << std::endl;
+	std::cout << "ax + by = e\ncx + dy = f\nPlease enter "
+		<< "successively a, b, c, d, e, f." << std::endl;
+	
+	rat coef[numCoef];
+	ReadRats(coef, numCoef);
+	rat a, b, c, d, e, f;
+	a = coef[0];
+	b = coef[1];
+	c = coef[2];
+	d = coef[3];
+	e = coef[4];
+	f = coef[5];
+
+	rat zeroMatrix = subrat(multrat(a, d), multrat(b, c));
+	if (zeroMatrix.numer() != 0)
+	{
+		rat firstMatrix = subrat(multrat(e, d), multrat(b, f));
+		rat secondMatrix = subrat(multrat(a, f), multrat(e, c));
+
+		std::cout << "x = "; 
+		quotrat(firstMatrix, zeroMatrix).printrat();
+
+		std::cout << "y = ";
+		quotrat(secondMatrix, zeroMatrix).printrat();
+	}
+	// Trying to distingiush between No solution and 
+	// Many solutions - NOT WORKING
+	/*else if (a.numer() == 0 && b.numer() == 0)
+	{
+		if (e.numer() != 0) std::cout << "No solution.";
+		else if (c.numer() == 0 && d.numer() == 0)
+		{
+			if (f.numer() != 0) std::cout << "No solution.";
+			else
+			{
+				std::cout << "Many solutions";
+			}
+		}
+		else 
+	}
+	else if (a.numer() == 0)
+	{
+		std::cout << "Many solutions for x";
+	}*/
+	else std::cout << "No solution or many solutions.";
+
+
+	return 0;
+}
+
+rat PowRat(rat r, int n)
+{
+	if (n == 0)
+	{
+		r.makerat(0, 1);
+		return r;
+	}
+
+	rat r1 = r;
+
+	for (int i = 0; i < n - 1; i++)
+		r = multrat(r, r1);
+
+	return r;
+}
+
+int main()
+{
+	std::cout << "Program that finds the value of " <<
+		"a0x^n + a1x^(n - 1) + ... + an" << std::endl;
+
+	int n;
+	do
+	{
+		std::cout << "Enter n : ";
+		std::cin >> n;
+	} while (n < 1 || n > maxPow);
+
+	rat coef[maxPow + 1];
+	ReadRats(coef, n + 1);
+	rat x;
+	int num, den;
+	std::cout << "Enter x = ";
+	std::cin >> num;
+	std::cin.get();
+	std::cin >> den;
+	x.makerat(num, den);
+
+	rat result;
+	result.makerat(0, 1);
+
+	for (int i = 0; i <= n; i++)
+		result = sumrat(result, multrat(coef[i], PowRat(x, n - i)));
+
+	result.printrat();
+
+
+	return 0;
+}
