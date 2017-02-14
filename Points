@@ -1,0 +1,169 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+const double eps = 0.02;
+const int maxPoints = 100;
+
+class point
+{
+	private :
+		double x, y;
+
+	public :
+		void readPoint();
+		void printPoint() const;
+		int xCoord() const;
+		int yCoord() const;
+		void sum(point const&, point const&);
+};
+
+void point::readPoint()
+{
+	std::cout << "Point x = ";
+	std::cin >> x;
+
+	std::cout << "Point y = ";
+	std::cin >> y;
+}
+
+void point::printPoint() const
+{
+	std::cout << "(" << x << ", "
+		<< y << ")";
+}
+
+int point::xCoord() const
+{
+	return x;
+}
+
+int point::yCoord() const
+{
+	return y;
+}
+
+void point::sum(point const& r1, point const& r2)
+{
+	x = r1.xCoord() + r2.xCoord();
+	y = r1.yCoord() + r2.yCoord();
+}
+
+void ReadPoints(point *p, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << "Point " << (i + 1)
+			<< std::endl;
+		std::cout << "--------------------"
+			<< std::endl;
+
+		p[i].readPoint();
+	}
+}
+
+void PrintPoints(point *p, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		p[i].printPoint();
+		std::cout << std::endl;
+	}
+}
+
+void RelayPoints(point *p, int n, point r)
+{
+	for (int i = 0; i < n; i++)
+		p[i].sum(p[i], r);
+}
+
+double distancePoints(point const& p1,
+	point const& p2)
+{
+	return sqrt(pow(p1.xCoord() - p2.xCoord(), 2) 
+		+ pow(p1.yCoord() - p2.yCoord(), 2));
+}
+
+bool isGreater(double a, double b)
+{
+	if (abs(a - b) <= eps)
+		return false;
+
+	return a - b > 0;
+}
+
+void DistanceAllPoints(point *p, int n)
+{
+	for (int i = 0; i < n - 1; i++)
+		for (int j = i + 1; j < n; j++)
+		{
+			std::cout << "Distance between points ";
+			p[i].printPoint();
+			std::cout << " and ";
+			p[j].printPoint();
+			std::cout << " is ";
+			std::cout << distancePoints(p[i], p[j]);
+			std::cout << std::endl;
+		}
+}
+
+void maxMinDistance(point *p, int n, 
+	bool (*compare)(double a, double b))
+{
+	double distance = distancePoints(p[0], p[1]);
+	point p1 = p[0], p2 = p[1];
+
+	for (int i = 0; i < n - 1; i++)
+		for (int j = i + 1; j < n; j++)
+		{
+			double currDistance = distancePoints(p[i], p[j]);
+			if (compare(currDistance, distance))
+			{
+				distance = currDistance;
+				p1 = p[i];
+				p2 = p[j];
+			}
+		}
+	
+	std::cout << " distance is " << "between the points ";
+	p1.printPoint(); 
+	std::cout << " and ";
+	p2.printPoint(); 
+	std::cout << " - " << distance << std::endl;
+}
+
+int main()
+{
+	int n;
+	do
+	{
+		std::cout << "n = ";
+		std::cin >> n;
+	} while (n < 2 || n > maxPoints);
+
+	point p[maxPoints];
+	ReadPoints(p, n);
+	PrintPoints(p, n);
+
+	point RelayPoint;
+	std::cout << "Relay point\n--------------------"
+		<< std::endl;
+	RelayPoint.readPoint();
+
+	RelayPoints(p, n, RelayPoint);
+	PrintPoints(p, n);
+
+	DistanceAllPoints(p, n);
+	
+	std::cout << "Max";
+	maxMinDistance(p, n, isGreater);
+
+	std::cout << "Min";
+	maxMinDistance(p, n, [](double a, double b) {
+		if (abs(a - b) <= eps)
+			return false;
+
+		return a - b < 0; });
+
+	return 0;
+}
