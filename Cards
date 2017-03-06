@@ -1,0 +1,96 @@
+#include <iostream>
+#include <string>
+
+enum ColorPlayingCard
+{
+	club, diamond, heart, spade
+};
+
+enum StrengthPlayingCard
+{
+	two, three, three, four, five, six, seven,
+	eight, nine, ten, jack, queen, king, ace
+};
+
+class PlayingCard
+{
+private:
+	ColorPlayingCard color;
+	StrengthPlayingCard power;
+public:
+	PlayingCard();
+	PlayingCard(ColorPlayingCard, StrengthPlayingCard);
+	void setColor(ColorPlayingCard);
+	void setStrength(StrengthPlayingCard);
+	ColorPlayingCard getColor() const;
+	StrengthPlayingCard getStrength() const;
+	void print() const;
+	bool isEqual(const PlayingCard&) const;
+};
+
+PlayingCard::PlayingCard()
+{
+	color = spade;
+	power = two;
+}
+
+PlayingCard::PlayingCard(ColorPlayingCard c, StrengthPlayingCard s)
+{
+	color = c;
+	power = s;
+}
+
+void PlayingCard::setColor(ColorPlayingCard c)
+{
+	color = c;
+}
+
+void PlayingCard::setStrength(StrengthPlayingCard s)
+{
+	power = s;
+}
+
+ColorPlayingCard PlayingCard::getColor() const
+{
+	return color;
+}
+
+StrengthPlayingCard PlayingCard::getStrength() const
+{
+	return power;
+}
+
+void PlayingCard::print() const
+{
+	std::cout << "color : ";
+	switch (getColor())
+	{
+	case club: std::cout << "club"; break;
+	case spade: std::cout << "spade"; break;
+	case heart: std::cout << "heart"; break;
+	case diamond: std::cout << "diamond";
+	}
+	std::cout << "\npower : ";
+	switch (getStrength())
+	{
+	case two: std::cout << "two"; break;
+	case three: std::cout << "three"; break;
+	case four: std::cout << "four"; break;
+	case five: std::cout << "five"; break;
+	case six: std::cout << "six"; break;
+	case seven: std::cout << "seven"; break;
+	case eight: std::cout << "eight"; break;
+	case nine: std::cout << "nine"; break;
+	case ten: std::cout << "ten"; break;
+	case jackd::cout << "two"; break;
+	case three: std::cout << "three"; break;
+	case four: std::cout << "four"; break;
+	}
+}
+
+int main()
+{
+	
+
+	return 0;
+}
