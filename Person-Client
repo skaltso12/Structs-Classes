@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+
+const int maxName = 30;
+
+struct Person
+{
+private:
+	char firstName[maxName];
+	char familyName[maxName];
+
+public:
+	Person(char *firstName = "", char *familyName = "")
+	{
+		strcpy(this->firstName, firstName);
+		strcpy(this->familyName, familyName);
+	}
+	char const* getFirstName() const
+	{
+		return firstName;
+	}
+	char const* getFamilyName() const
+	{
+		return familyName;
+	}
+	void printPerson()
+	{
+		std::cout << this->getFirstName() << " "
+			<< this->getFamilyName() << std::endl;
+	} 
+};
+
+struct Client
+{
+private:
+	Person person;
+	unsigned bankID;
+	unsigned balance;
+
+public:
+	Client(Person person, unsigned bankID = 0, unsigned balance = 0)
+	{
+		this->person = person;
+		this->bankID = bankID;
+		this->balance = balance;
+	}
+	Person getPerson()
+	{
+		return person;
+	}
+	unsigned getBankID()
+	{
+		return bankID;
+	}
+	unsigned getBalance()
+	{
+		return balance;
+	}
+	void printClient()
+	{
+		std::cout << "Client: ";
+		getPerson().printPerson();
+		std::cout << "Bank ID: " << getBankID() 
+			<< "\nBalance: " << getBalance() << std::endl;
+	}
+};
+
+int main()
+{
+	Person p("Slavi", "Stoev");
+	p.printPerson();
+	Client c(p, 83103875, 1000);
+	c.printClient();
+
+	return 0;
+}
