@@ -82,15 +82,26 @@ void PlayingCard::print() const
 	case eight: std::cout << "eight"; break;
 	case nine: std::cout << "nine"; break;
 	case ten: std::cout << "ten"; break;
-	case jackd::cout << "two"; break;
-	case three: std::cout << "three"; break;
-	case four: std::cout << "four"; break;
+	case jack: std::cout << "jack"; break;
+	case queen: std::cout << "queen"; break;
+	case king: std::cout << "king"; break;
+	case ace: std::cout << "ace";
 	}
+	std::cout << std::endl;
 }
 
+bool PlayingCard::isEqual(const PlayingCard& c) const
+{
+	return this->getColor() == c.getColor()
+		&& this->getStrength() == c.getStrength();
+}
 int main()
 {
-	
+	PlayingCard r(club, ace),
+		q(club, ace);
+	r.print();
+	q.print();
+	std::cout << r.isEqual(q) << std::endl;
 
 	return 0;
 }
