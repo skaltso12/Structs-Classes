@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+//#include <fstream>
 
 const int maxName = 30;
 
@@ -7,70 +8,171 @@ struct Person
 {
 private:
 	char firstName[maxName];
-	char familyName[maxName];
+	char lastName[maxName];
 
 public:
-	Person(char *firstName = "", char *familyName = "")
-	{
-		strcpy(this->firstName, firstName);
-		strcpy(this->familyName, familyName);
-	}
-	char const* getFirstName() const
-	{
-		return firstName;
-	}
-	char const* getFamilyName() const
-	{
-		return familyName;
-	}
-	void printPerson()
-	{
-		std::cout << this->getFirstName() << " "
-			<< this->getFamilyName() << std::endl;
-	} 
+	Person(char* = "", char* = "");
+	char const* getFirstName() const;
+	char const* getLastName() const;
+	void printPerson();
+	void readPerson();
+	//void setFirstName(char*);
 };
 
 struct Client
 {
 private:
 	Person person;
-	unsigned bankID;
-	unsigned balance;
+	unsigned long bankID;
+	unsigned long balance;
 
 public:
-	Client(Person person, unsigned bankID = 0, unsigned balance = 0)
-	{
-		this->person = person;
-		this->bankID = bankID;
-		this->balance = balance;
-	}
-	Person getPerson()
-	{
-		return person;
-	}
-	unsigned getBankID()
-	{
-		return bankID;
-	}
-	unsigned getBalance()
-	{
-		return balance;
-	}
-	void printClient()
-	{
-		std::cout << "Client: ";
-		getPerson().printPerson();
-		std::cout << "Bank ID: " << getBankID() 
-			<< "\nBalance: " << getBalance() << std::endl;
-	}
+	Client(Person = Person("", ""), unsigned = 0, unsigned = 0);
+	Person getPerson();
+	unsigned long getBankID();
+	unsigned long getBalance();
+	void printClient();
+	void readClient();
 };
+
+Person::Person(char *firstName, char *lastName)
+{
+	strcpy(this->firstName, firstName);
+	strcpy(this->lastName, lastName);
+}
+char const* Person::getFirstName() const
+{
+	return firstName;
+}
+char const* Person::getLastName() const
+{
+	return lastName;
+}
+void Person::printPerson()
+{
+	std::cout << this->getFirstName() << " "
+		<< this->getLastName() << std::endl;
+}
+
+//std::ofstream out_file("output.txt");
+//void Person::printPerson()
+//{
+//	out_file << this->getFirstName() << " "
+//		<< this->getLastName() << "\n";
+//}
+
+void Person::readPerson()
+{
+	std::cout << "First name : ";
+	/*char firstN[maxN];
+	std::cin.getline(firstN, maxN);
+	this->setFirstName(firstN);*/
+	std::cin.getline(firstName, maxN);
+	std::cout << "Last name : ";
+	std::cin.getline(lastName, maxN);
+}
+
+//read person from file
+//std::ifstream in_file("input.txt");
+//void Person::readPerson()
+//{
+//	in_file.getline(firstName, maxN);
+//	in_file.getline(lastName, maxN);
+//}
+
+//void Person::setFirstName(char *firstN)
+//{
+//	strcpy(firstName, firstN);
+//}
+
+Client::Client(Person person, unsigned bankID, unsigned balance)
+{
+	this->person = person;
+	this->bankID = bankID;
+	this->balance = balance;
+}
+Person Client::getPerson()
+{
+	return person;
+}
+unsigned long Client::getBankID()
+{
+	return bankID;
+}
+unsigned long Client::getBalance()
+{
+	return balance;
+}
+void Client::printClient()
+{
+	std::cout << "Client: ";
+	getPerson().printPerson();
+	std::cout << "Bank ID: " << getBankID()
+		<< "\nBalance: " << getBalance() << std::endl;
+}
+
+//void Client::printClient()
+//{
+//	out_file << "Client: ";
+//	getPerson().printPerson();
+//	out_file << "Bank ID: " << getBankID()
+//		<< "\nBalance: " << getBalance() << "\n";
+//}
+
+void Client::readClient()
+{
+	this->person.readPerson();
+	std::cout << "Bank ID : ";
+	std::cin >> bankID;
+	std::cout << "Balance : ";
+	std::cin >> balance;
+	std::cin.get();
+}
+
+//read client from file 
+//void Client::readClient()
+//{
+//	this->person.readPerson();
+//	in_file >> bankID;
+//	in_file >> balance;
+//	in_file.get();
+//}
 
 int main()
 {
-	Person p("Slavi", "Stoev");
+	/*Person p("Slavi", "Stoev");
 	p.printPerson();
 	Client c(p, 83103875, 1000);
 	c.printClient();
 
+	Person q;
+	q.readPerson();
+	q.printPerson();*/
+
+	/*Client c;
+	c.readClient();
+	c.printClient();*/
+
+	Client clients[10];
+	for (int i = 0; i < 4; i++)
+	{
+		clients[i].readClient();
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		clients[i].printClient();
+	}
+
+	/*std::ofstream myfile;
+	myfile.open("output.txt");
+
+	if (myfile.is_open())
+	{
+		std::cout << "Yes";
+		myfile << "Example text\n";
+		myfile.close();
+	}
+*/
 	return 0;
 }
