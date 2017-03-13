@@ -1,0 +1,132 @@
+#pragma once
+
+int const NUM = 40;
+
+struct Position
+{
+private:
+	int x, y, z;
+public:
+	Position(int = 0, int = 0, int = 0);
+	void setPositionX(int);
+	void setPositionY(int);
+	void setPositionZ(int);
+	int getPositionX() const;
+	int getPositionY() const;
+	int getPositionZ() const;
+	void readPosition();
+};
+
+class Planet
+{
+private:
+	char name[NUM];
+	Position pos;
+	float diam;
+public:
+	Planet(char* = "", float diam = 0);
+	//Planet(Planet const &);
+	//Planet& operator=(Planet const &);
+	char const* getName() const;
+	float getDiam() const;
+	Position getPosition() const;
+	void setPosition();
+	void setName();
+	void setDiam();
+	double Distance(Planet const &);
+	double DistanceToSun();
+};
+
+#include <iostream>
+#include "Header.h"
+#include <cmath>
+
+Position::Position(int x, int y, int z)
+{
+	this->x = x;
+	this->y = y;
+	this->z = z;
+}
+
+void Position::setPositionX(int x)
+{
+	this->x = x;
+}
+
+void Position::setPositionY(int y)
+{
+	this->y = y;
+}
+
+void Position::setPositionZ(int z)
+{
+	this->z = z;
+}
+
+int Position::getPositionX() const
+{
+	return x;
+}
+
+int Position::getPositionY() const
+{
+	return y;
+}
+
+int Position::getPositionZ() const
+{
+	return z;
+}
+
+void Position::readPosition()
+{
+	int x, y, z;
+	std::cout << "x, y, z = ";
+	std::cin >> x >> y >> z;
+	setPositionX(x);
+	setPositionY(y);
+	setPositionZ(z);
+}
+
+Planet::Planet(char *c, float d)
+{
+	strcpy(name, c);
+	d = 0;
+}
+
+char const* Planet::getName() const
+{
+	return name;
+}
+
+float Planet::getDiam() const
+{
+	return diam;
+}
+
+Position Planet::getPosition() const
+{
+	return pos;
+}
+
+void Planet::setPosition()
+{
+	pos.readPosition();
+}
+
+void Planet::setName()
+{
+	std::cin >> name;
+}
+
+void Planet::setDiam()
+{
+	std::cin >> diam;
+}
+
+double Planet::Distance(Planet const & p)
+{
+	return sqrt(pow(getPosition().getPositionX()
+		- p.getPosition().getPositionX(), 2)
+	+ pow());
+}
