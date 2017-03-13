@@ -128,5 +128,8 @@ double Planet::Distance(Planet const & p)
 {
 	return sqrt(pow(getPosition().getPositionX()
 		- p.getPosition().getPositionX(), 2)
-	+ pow());
+	+ pow(getPosition().getPositionY() -
+		p.getPosition().getPositionY(), 2)
+		+ pow(getPosition().getPositionZ()
+			- p.getPosition().getPositionZ(), 2));
 }
