@@ -1,6 +1,6 @@
 #pragma once
 
-int const NUM = 40;
+//const int NUM = 40;
 
 struct Position
 {
@@ -15,24 +15,30 @@ public:
 	int getPositionY() const;
 	int getPositionZ() const;
 	void readPosition();
+	void printPosition() const;
 };
 
 class Planet
 {
 private:
-	char name[NUM];
+	//char name[NUM];
+	char *name;
 	Position pos;
 	float diam;
 public:
-	Planet(char* = "", float diam = 0);
-	//Planet(Planet const &);
-	//Planet& operator=(Planet const &);
+	Planet(char* = "", int = 0, int = 0, int = 0, float diam = 0);
+	~Planet();
+	Planet(Planet const &);
+	Planet& operator=(Planet const &);
+	void copy(Planet const &);
 	char const* getName() const;
 	float getDiam() const;
 	Position getPosition() const;
 	void setPosition();
 	void setName();
 	void setDiam();
+	void readPlanet();
+	void printPlanet();
 	double Distance(Planet const &);
 	double DistanceToSun();
 };
@@ -40,6 +46,9 @@ public:
 #include <iostream>
 #include "Header.h"
 #include <cmath>
+#include <string>
+
+const int NUM = 100;
 
 Position::Position(int x, int y, int z)
 {
@@ -88,10 +97,47 @@ void Position::readPosition()
 	setPositionZ(z);
 }
 
-Planet::Planet(char *c, float d)
+void Position::printPosition() const
 {
+	std::cout << "(" << getPositionX() <<
+		", " << getPositionY() << ", "
+		<< getPositionZ() << ")";
+}
+
+Planet::Planet(char *c, int x, int y, int z, float d)
+{
+	name = new char[strlen(c) + 1];
 	strcpy(name, c);
-	d = 0;
+	pos = Position(x, y, z);
+	diam = d;
+}
+
+Planet::~Planet()
+{
+	delete[] name;
+}
+
+Planet::Planet(Planet const &p)
+{
+	copy(p);
+}
+
+Planet& Planet::operator=(Planet const &p)
+{
+	if (this != &p)
+	{
+		delete[] name;
+		copy(p);
+	}
+	return *this;
+}
+
+void Planet::copy(Planet const &p)
+{
+	name = new char[strlen(p.name) + 1];
+	strcpy(name, p.name);
+	pos = p.pos;
+	diam = p.diam;
 }
 
 char const* Planet::getName() const
@@ -111,25 +157,70 @@ Position Planet::getPosition() const
 
 void Planet::setPosition()
 {
+	std::cout << "position : ";
 	pos.readPosition();
 }
 
 void Planet::setName()
 {
-	std::cin >> name;
+	delete[] name;
+	std::cout << "name : ";
+	char s[NUM];
+	std::cin >> s;
+	name = new char[strlen(s) + 1];
+	strcpy(name, s);
 }
 
 void Planet::setDiam()
 {
+	std::cout << "diam : ";
 	std::cin >> diam;
+}
+
+void Planet::readPlanet()
+{
+	setName();
+	setPosition();
+	setDiam();
+}
+
+void Planet::printPlanet()
+{
+	std::cout << getName() << ", ";
+	pos.printPosition();
+	std::cout << ", " << getDiam() << std::endl;
 }
 
 double Planet::Distance(Planet const & p)
 {
 	return sqrt(pow(getPosition().getPositionX()
 		- p.getPosition().getPositionX(), 2)
-	+ pow(getPosition().getPositionY() -
-		p.getPosition().getPositionY(), 2)
+		+ pow(getPosition().getPositionY() -
+			p.getPosition().getPositionY(), 2)
 		+ pow(getPosition().getPositionZ()
 			- p.getPosition().getPositionZ(), 2));
+}
+
+double Planet::DistanceToSun()
+{
+	Planet p; // initializing a sun with coordinates (0, 0, 0)
+	return Distance(p);
+}
+
+#include <iostream>
+#include "Header.h"
+
+int main()
+{
+	Planet Earth("Earth", 2, 5, 1, 12.7e3);
+	Planet Mars(Earth);
+	//Mars = Earth;
+	Mars.printPlanet();
+	Earth.printPlanet();
+
+	/*Planet Venus;
+	Venus.readPlanet();
+	Venus.printPlanet();*/
+
+	return 0;
 }
