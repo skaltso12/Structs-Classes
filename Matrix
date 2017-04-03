@@ -52,7 +52,13 @@ void matrix::ReadMatrix()
 	{
 		matr[i] = new double[columns];
 	}
-
+	
+	// matrix x(rows, columns);
+	//for (int i = 0; i < rows; i++)
+	//	for (int j = 0; j < columns; j++)
+	//		std::cin >> x.matr[i][j];
+	//matr = x.matr;
+	
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
 			std::cin >> matr[i][j];
