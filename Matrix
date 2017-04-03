@@ -1,0 +1,108 @@
+Source.cpp
+#include <iostream>
+#include "Header.h"
+#include <string>
+
+matrix::matrix(int row, int col)
+{
+	rows = row;
+	columns = col;
+	if (rows == 0 || columns == 0)
+		matr = NULL;
+	else
+	{
+		matr = new double*[rows];
+		for (int i = 0; i < rows; i++)
+		{
+			matr[i] = new double[columns];
+		}
+
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				matr[i][j] = 0;
+	}
+}
+
+void matrix::printmatrix()
+{
+	if (matr)
+	{
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+				std::cout << matr[i][j] << " ";
+			std::cout << std::endl;
+		}
+	}
+	else
+		std::cout << "Matrix not specified." << std::endl;
+}
+
+void matrix::ReadMatrix()
+{
+	std::cout << "Matrix rows = ";
+	std::cin >> rows;
+	std::cout << "Matrix columns = ";
+	std::cin >> columns;
+
+	delmatrix();
+
+	matr = new double*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		matr[i] = new double[columns];
+	}
+
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			std::cin >> matr[i][j];
+}
+
+void matrix::delmatrix()
+{
+	if (matr)
+	{
+		for (int i = 0; i < rows; i++)
+			delete[] matr[i];
+		delete[] matr;
+	}
+}
+
+main.cpp
+#include <iostream>
+#include "Header.h"
+
+int main()
+{
+	matrix m;
+	m.printmatrix();
+	matrix n(4, 5);
+	n.printmatrix();
+	m.ReadMatrix();
+	m.printmatrix();
+
+
+	return 0;
+}
+
+Header.h
+#pragma once
+
+class matrix
+{
+public:
+	matrix(int = 0, int = 0);
+	void ReadMatrix();
+	//~matrix();
+	//matrix(matrix const&);
+	//matrix& operator=(matrix const&);
+	void printmatrix();
+	//int getRows() const;
+	//int getColumns() const;
+
+private:
+	int rows, columns;
+	double **matr;
+	void delmatrix();
+	//void copymatrix();
+};
